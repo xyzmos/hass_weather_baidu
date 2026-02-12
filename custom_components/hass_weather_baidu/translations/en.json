@@ -1,0 +1,75 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Baidu Weather Configuration",
+        "description": "Enter your Baidu Map API Key and select configuration mode",
+        "data": {
+          "ak": "Baidu Map API Key",
+          "mode": "Configuration Mode"
+        },
+        "data_description": {
+          "ak": "Developer key obtained from Baidu Map Open Platform API Console",
+          "mode": "Choose to get weather data by administrative district or location coordinates"
+        }
+      },
+      "province": {
+        "title": "Select Province",
+        "data": {
+          "province": "Province"
+        }
+      },
+      "city": {
+        "title": "Select City",
+        "data": {
+          "city": "City"
+        }
+      },
+      "district": {
+        "title": "Select District",
+        "data": {
+          "district": "District"
+        }
+      },
+      "location": {
+        "title": "Select Location",
+        "description": "Select a location configured in Home Assistant",
+        "data": {
+          "zone": "Location"
+        }
+      }
+    },
+    "error": {
+      "invalid_ak": "Invalid API Key, please check and try again",
+      "cannot_connect": "Cannot connect to Baidu Weather service, please check your network",
+      "unknown": "An unknown error occurred",
+      "invalid_location": "Invalid location selection"
+    },
+    "abort": {
+      "already_configured": "This location is already configured"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Baidu Weather Options",
+        "data": {
+          "update_interval": "Update Interval (seconds)"
+        },
+        "data_description": {
+          "update_interval": "Weather data update interval, range 300-7200 seconds, default 900 seconds (15 minutes)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "weather_alert": {
+        "name": "Weather Alert"
+      },
+      "aqi": {
+        "name": "Air Quality Index"
+      }
+    }
+  }
+}

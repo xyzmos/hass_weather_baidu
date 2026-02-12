@@ -1,0 +1,8 @@
+{
+  "name": "百度天气",
+  "render_readme": true,
+  "domains": ["weather", "sensor"],
+  "country": ["CN"],
+  "homeassistant": "2024.1.0",
+  "iot_class": "cloud_polling"
+}

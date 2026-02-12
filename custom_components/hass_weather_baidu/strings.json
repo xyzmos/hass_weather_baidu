@@ -1,0 +1,75 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "百度天气配置",
+        "description": "请输入百度地图开放平台的 AK 密钥并选择配置模式",
+        "data": {
+          "ak": "百度地图 AK 密钥",
+          "mode": "配置模式"
+        },
+        "data_description": {
+          "ak": "在百度地图开放平台 API 控制台申请获得的开发者密钥",
+          "mode": "选择通过行政区划或地点经纬度来获取天气数据"
+        }
+      },
+      "province": {
+        "title": "选择省份",
+        "data": {
+          "province": "省份"
+        }
+      },
+      "city": {
+        "title": "选择城市",
+        "data": {
+          "city": "城市"
+        }
+      },
+      "district": {
+        "title": "选择区县",
+        "data": {
+          "district": "区县"
+        }
+      },
+      "location": {
+        "title": "选择地点",
+        "description": "选择 Home Assistant 中已配置的地点",
+        "data": {
+          "zone": "地点"
+        }
+      }
+    },
+    "error": {
+      "invalid_ak": "无效的 AK 密钥，请检查后重试",
+      "cannot_connect": "无法连接到百度天气服务，请检查网络",
+      "unknown": "发生未知错误",
+      "invalid_location": "无效的地点选择"
+    },
+    "abort": {
+      "already_configured": "该地点已配置"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "百度天气选项",
+        "data": {
+          "update_interval": "更新间隔（秒）"
+        },
+        "data_description": {
+          "update_interval": "天气数据更新间隔，范围 300-7200 秒，默认 900 秒（15分钟）"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "weather_alert": {
+        "name": "天气预警"
+      },
+      "aqi": {
+        "name": "空气质量指数"
+      }
+    }
+  }
+}
