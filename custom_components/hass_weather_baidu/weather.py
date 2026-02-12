@@ -13,6 +13,7 @@ from homeassistant.components.weather import (
 )
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
+    UnitOfLength,
     UnitOfPressure,
     UnitOfSpeed,
     UnitOfTemperature,
@@ -144,8 +145,8 @@ class BaiduWeatherEntity(CoordinatorEntity[BaiduWeatherCoordinator], WeatherEnti
         return self._now_data.get("clouds")
 
     @property
-    def visibility(self) -> float | None:
-        """Return the visibility in km."""
+    def native_visibility(self) -> float | None:
+        """Return visibility in km."""
         vis = self._now_data.get("vis")
         if vis is None:
             return None
@@ -153,17 +154,8 @@ class BaiduWeatherEntity(CoordinatorEntity[BaiduWeatherCoordinator], WeatherEnti
         return vis / 1000.0
 
     @property
-    def native_visibility(self) -> float | None:
-        """Return visibility in km."""
-        vis = self._now_data.get("vis")
-        if vis is None:
-            return None
-        return vis / 1000.0
-
-    @property
     def native_visibility_unit(self) -> str:
         """Return the visibility unit."""
-        from homeassistant.const import UnitOfLength
         return UnitOfLength.KILOMETERS
 
     @property
