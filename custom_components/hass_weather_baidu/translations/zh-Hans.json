@@ -69,6 +69,21 @@
       },
       "aqi": {
         "name": "空气质量指数"
+      },
+      "forecast_today": {
+        "name": "今天天气预报"
+      },
+      "forecast_tomorrow": {
+        "name": "明天天气预报"
+      },
+      "forecast_day2": {
+        "name": "后天天气预报"
+      },
+      "forecast_day3": {
+        "name": "大后天天气预报"
+      },
+      "forecast_day4": {
+        "name": "第五天天气预报"
       }
     }
   }

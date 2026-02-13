@@ -69,6 +69,21 @@
       },
       "aqi": {
         "name": "Air Quality Index"
+      },
+      "forecast_today": {
+        "name": "Today's Weather Forecast"
+      },
+      "forecast_tomorrow": {
+        "name": "Tomorrow's Weather Forecast"
+      },
+      "forecast_day2": {
+        "name": "Day After Tomorrow Forecast"
+      },
+      "forecast_day3": {
+        "name": "3-Day Forecast"
+      },
+      "forecast_day4": {
+        "name": "4-Day Forecast"
       }
     }
   }
