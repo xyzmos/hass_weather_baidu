@@ -28,8 +28,10 @@ from .const import (
     CONDITION_MAP,
     CONF_LOCATION_NAME,
     DOMAIN,
+    KEY_ALERTS,
     KEY_FORECAST_HOURS,
     KEY_FORECASTS,
+    KEY_INDEXES,
     KEY_NOW,
     WIND_BEARING_MAP,
     WIND_SPEED_MAP,
@@ -175,7 +177,13 @@ class BaiduWeatherEntity(CoordinatorEntity[BaiduWeatherCoordinator], WeatherEnti
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
-        """Return extra state attributes for voice assistants."""
+        """Return extra state attributes for voice assistants.
+
+        Includes forecast data so that LLM integrations (e.g. Extended OpenAI
+        Conversation) can read forecasts directly from entity state without
+        needing to call the weather.get_forecasts service (which requires
+        return_response=True that many LLM integrations don't support).
+        """
         attrs: dict[str, Any] = {}
         now = self._now_data
 
@@ -201,6 +209,88 @@ class BaiduWeatherEntity(CoordinatorEntity[BaiduWeatherCoordinator], WeatherEnti
             attrs["wind_direction_cn"] = now["wind_dir"]
         if now.get("uptime") is not None:
             attrs["update_time"] = now["uptime"]
+
+        # --- Daily forecast (for voice assistants / LLM) ---
+        if self.coordinator.data is not None:
+            forecasts_raw = self.coordinator.data.get(KEY_FORECASTS, [])
+            if forecasts_raw:
+                forecast_list = []
+                for fc in forecasts_raw:
+                    date_str = fc.get("date", "")
+                    entry: dict[str, Any] = {"date": date_str}
+                    if fc.get("text_day"):
+                        entry["condition_day"] = fc["text_day"]
+                    if fc.get("text_night"):
+                        entry["condition_night"] = fc["text_night"]
+                    if fc.get("high") is not None:
+                        entry["temperature_high"] = fc["high"]
+                    if fc.get("low") is not None:
+                        entry["temperature_low"] = fc["low"]
+                    if fc.get("wc_day"):
+                        entry["wind_class_day"] = fc["wc_day"]
+                    if fc.get("wd_day"):
+                        entry["wind_direction_day"] = fc["wd_day"]
+                    if fc.get("wc_night"):
+                        entry["wind_class_night"] = fc["wc_night"]
+                    if fc.get("wd_night"):
+                        entry["wind_direction_night"] = fc["wd_night"]
+                    forecast_list.append(entry)
+                attrs["forecast_daily"] = forecast_list
+
+            # --- Hourly forecast ---
+            hours_raw = self.coordinator.data.get(KEY_FORECAST_HOURS, [])
+            if hours_raw:
+                hourly_list = []
+                for hour in hours_raw:
+                    entry = {}
+                    if hour.get("data_time"):
+                        entry["datetime"] = hour["data_time"]
+                    if hour.get("text"):
+                        entry["condition"] = hour["text"]
+                    if hour.get("temp_fc") is not None:
+                        entry["temperature"] = hour["temp_fc"]
+                    if hour.get("rh") is not None:
+                        entry["humidity"] = hour["rh"]
+                    if hour.get("wind_class"):
+                        entry["wind_class"] = hour["wind_class"]
+                    if hour.get("wind_dir"):
+                        entry["wind_direction"] = hour["wind_dir"]
+                    if hour.get("prec_1h") is not None:
+                        entry["precipitation"] = hour["prec_1h"]
+                    hourly_list.append(entry)
+                attrs["forecast_hourly"] = hourly_list
+
+            # --- Weather alerts ---
+            alerts = self.coordinator.data.get(KEY_ALERTS, [])
+            if alerts:
+                alert_list = []
+                for alert in alerts:
+                    entry = {}
+                    if alert.get("title"):
+                        entry["title"] = alert["title"]
+                    if alert.get("type"):
+                        entry["type"] = alert["type"]
+                    if alert.get("level"):
+                        entry["level"] = alert["level"]
+                    if alert.get("desc"):
+                        entry["description"] = alert["desc"]
+                    alert_list.append(entry)
+                attrs["alerts"] = alert_list
+
+            # --- Life indexes ---
+            indexes = self.coordinator.data.get(KEY_INDEXES, [])
+            if indexes:
+                index_list = []
+                for idx in indexes:
+                    entry = {}
+                    if idx.get("name"):
+                        entry["name"] = idx["name"]
+                    if idx.get("brief"):
+                        entry["brief"] = idx["brief"]
+                    if idx.get("detail"):
+                        entry["detail"] = idx["detail"]
+                    index_list.append(entry)
+                attrs["life_indexes"] = index_list
 
         return attrs
 
